@@ -5,6 +5,7 @@ import CharacterSet from "../components/CharacterSet";
 import Sheet from "@mui/joy/Sheet";
 import Grid from "@mui/joy/Grid";
 import Button from "@mui/joy/Button";
+import Layout from "../components/Layout";
 
 const IndexPage: React.FC<PageProps> = () => {
   const pageSize = 1;
@@ -38,6 +39,7 @@ const IndexPage: React.FC<PageProps> = () => {
   });
 
   return (
+      <Layout>
     <Grid container spacing={2} sx={{ flexGrow: 1 }}>
       <Button
         loading={false}
@@ -60,6 +62,7 @@ const IndexPage: React.FC<PageProps> = () => {
       </Button>
       {elements}
     </Grid>
+      </Layout>
   );
 };
 
