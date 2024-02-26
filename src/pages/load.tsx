@@ -20,6 +20,11 @@ import { useDropzone } from "react-dropzone";
 import Box from "@mui/joy/Box";
 import { downloadData, charsetToByteArray } from "../utils/binary";
 import { copyToClipboard } from "../utils/clipboard";
+import Layout from "../components/Layout";
+import Typography from '@mui/joy/Typography';
+import IndicatorTopStepper from "../components/Stepper";
+import CopyAll from '@mui/icons-material/CopyAll';
+import UploadFile from '@mui/icons-material/UploadFile';
 
 const LoadPage: React.FC<PageProps> = () => {
   const [pattern, setPattern] = React.useState("");
@@ -55,7 +60,7 @@ const LoadPage: React.FC<PageProps> = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   // Loads text patterns and sets JSON data
-  React.useEffect(() => {
+  useEffect(() => {
     const lines = pattern.split("\n").map((x) => x.trim());
 
     const result: number[] = [];
@@ -164,213 +169,239 @@ const LoadPage: React.FC<PageProps> = () => {
     const data = charsetToByteArray(sanitizedData, width);
     downloadData(data);
   };
+
   const copy = () => {
     copyToClipboard(resultJSON);
     setJSONData("");
   };
 
   return (
-    <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-      <Grid xs={12}>Input:</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined">
-          <Tabs>
-            <TabList>
-              <Tab variant="plain" color="neutral">
-                JSON
-              </Tab>
-              <Tab variant="plain" color="neutral">
-                File Drop
-              </Tab>
-              <Tab variant="plain" color="neutral">
-                Pattern
-              </Tab>
-            </TabList>
-            <TabPanel value={0}>
-              <FormControl>
-                <FormLabel>JSON byte array:</FormLabel>
-                <Textarea
-                  minRows={5}
-                  maxRows={5}
-                  placeholder="[68, 43, ...]"
-                  variant="outlined"
-                  value={JSONData}
-                  onChange={(event) => setJSONData(event.target.value)}
+      <Layout>
+        <Grid container spacing={2} sx={{ flexGrow: 1, paddingBottom: "2rem" }}>
+          <IndicatorTopStepper/>
+        </Grid>
+        <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+        <Grid xs={12}>
+          <Typography level="title-lg">Input</Typography>
+        </Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined">
+            <Tabs>
+              <TabList>
+                <Tab variant="plain" color="neutral">
+                  File Drop
+                </Tab>
+                <Tab variant="plain" color="neutral">
+                  Pattern
+                </Tab>
+                <Tab variant="plain" color="neutral">
+                  JSON
+                </Tab>
+              </TabList>
+              <TabPanel value={0} sx={{minHeight: "240px"}}>
+                <div {...getRootProps()}>
+                  <div style={{
+                    border: "1px dashed black",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    minHeight: "200px",
+                    alignItems: "center",
+                    cursor: "pointer"
+                  }}>
+                    <input {...getInputProps()} />
+                    <UploadFile/>
+                    <p>Drag 'n' drop file here, or click to select file</p>
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel value={1} sx={{minHeight: "240px"}}>
+                <FormControl>
+                  <FormLabel>Text Pattern:</FormLabel>
+                  <Textarea
+                    minRows={5}
+                    maxRows={5}
+                    placeholder="00011100"
+                    variant="outlined"
+                    value={pattern}
+                    onChange={(event) => setPattern(event.target.value)}
+                  />
+                </FormControl>
+              </TabPanel>
+              <TabPanel value={2} sx={{minHeight: "240px"}}>
+                <FormControl>
+                  <FormLabel>JSON byte array:</FormLabel>
+                  <Textarea
+                      minRows={5}
+                      maxRows={5}
+                      placeholder="[68, 43, ...]"
+                      variant="outlined"
+                      value={JSONData}
+                      onChange={(event) => setJSONData(event.target.value)}
+                  />
+                  <FormHelperText>Enter the binary data from a JSON number array.</FormHelperText>
+                </FormControl>
+              </TabPanel>
+            </Tabs>
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>
+          <Typography level="title-lg">Parsing</Typography>
+        </Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+              <Grid xs={6}>Direction:</Grid>
+              <Grid xs={6}>Byte-Order:</Grid>
+              <Grid xs={6}>
+                <Select
+                  value={direction}
+                  onChange={(_event, value) => {
+                    if (value) {
+                      setDirection(value);
+                    }
+                  }}
+                >
+                  <Option value="MSB">Most Significant Bit first</Option>
+                  <Option value="LSB">Least Significant Bit first</Option>
+                </Select>
+              </Grid>
+              <Grid xs={6}>
+                <Select
+                  value={byteOrder}
+                  onChange={(_event, value) => {
+                    if (value) {
+                      setByteOrder(value);
+                    }
+                  }}
+                  disabled={byteOrderDisabled}
+                >
+                  <Option value="Little">Little Endian</Option>
+                  <Option value="Big">Big Endian</Option>
+                </Select>
+              </Grid>
+              <Grid xs={4}>Skip Data (in bytes):</Grid>
+              <Grid xs={4}>Data Width (in bits):</Grid>
+              <Grid xs={4}>Data Height (in rows):</Grid>
+              <Grid xs={4}>
+                <Slider
+                  disabled={false}
+                  orientation="horizontal"
+                  valueLabelDisplay="on"
+                  min={0}
+                  max={256}
+                  value={skipBytes}
+                  onChange={(_event, value, _activeThumb) => setSkipBytes(Array.isArray(value) ? value[0] : value)}
                 />
-                <FormHelperText>Enter the binary data from a JSON number array.</FormHelperText>
-              </FormControl>
-            </TabPanel>
-            <TabPanel value={1}>
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
-              </div>
-            </TabPanel>
-            <TabPanel value={2}>
-              <FormControl>
-                <FormLabel>Text Pattern:</FormLabel>
-                <Textarea
-                  minRows={5}
-                  maxRows={5}
-                  placeholder="00011100"
-                  variant="outlined"
-                  value={pattern}
-                  onChange={(event) => setPattern(event.target.value)}
+              </Grid>
+              <Grid xs={4}>
+                <Slider
+                  disabled={false}
+                  marks
+                  orientation="horizontal"
+                  valueLabelDisplay="on"
+                  min={1}
+                  max={16}
+                  value={dataWidth}
+                  onChange={(_event, value, _activeThumb) => setDataWidth(Array.isArray(value) ? value[0] : value)}
                 />
-                <FormHelperText>Enter the binary data from a JSON number array.</FormHelperText>
-              </FormControl>
-            </TabPanel>
-          </Tabs>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>Parsing:</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-            <Grid xs={6}>Direction:</Grid>
-            <Grid xs={6}>Byte-Order:</Grid>
-            <Grid xs={6}>
-              <Select
-                value={direction}
-                onChange={(_event, value) => {
-                  if (value) {
-                    setDirection(value);
-                  }
-                }}
-              >
-                <Option value="MSB">Most Significant Bit first</Option>
-                <Option value="LSB">Least Significant Bit first</Option>
-              </Select>
+              </Grid>
+              <Grid xs={4}>
+                <Slider
+                  disabled={false}
+                  marks
+                  orientation="horizontal"
+                  valueLabelDisplay="on"
+                  min={1}
+                  max={24}
+                  value={dataHeight}
+                  onChange={(_event, value, _activeThumb) => setDataHeight(Array.isArray(value) ? value[0] : value)}
+                />
+              </Grid>
             </Grid>
-            <Grid xs={6}>
-              <Select
-                value={byteOrder}
-                onChange={(_event, value) => {
-                  if (value) {
-                    setByteOrder(value);
-                  }
-                }}
-                disabled={byteOrderDisabled}
-              >
-                <Option value="Little">Little Endian</Option>
-                <Option value="Big">Big Endian</Option>
-              </Select>
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>
+            <Typography level="title-lg">
+              Parsed Character Set: {inputData.length} characters
+            </Typography>
+        </Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <CharacterSet dataWidth={dataWidth} data={inputData}></CharacterSet>
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>Sanitizing:</Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+              <Grid xs={6}>Width (in pixel):</Grid>
+              <Grid xs={6}>Height (in pixel):</Grid>
+              <Grid xs={6}>
+                <Slider
+                  disabled={false}
+                  marks
+                  orientation="horizontal"
+                  valueLabelDisplay="on"
+                  min={1}
+                  max={dataWidth}
+                  value={width}
+                  onChange={(_event, value, _activeThumb) => setWidth(Array.isArray(value) ? value[0] : value)}
+                />
+              </Grid>
+              <Grid xs={6}>
+                <Slider
+                  disabled={false}
+                  marks
+                  orientation="horizontal"
+                  valueLabelDisplay="on"
+                  min={1}
+                  max={dataHeight}
+                  value={height}
+                  onChange={(_event, value, _activeThumb) => setHeight(Array.isArray(value) ? value[0] : value)}
+                />
+              </Grid>
             </Grid>
-            <Grid xs={4}>Skip Data (in bytes):</Grid>
-            <Grid xs={4}>Data Width (in bits):</Grid>
-            <Grid xs={4}>Data Height (in rows):</Grid>
-            <Grid xs={4}>
-              <Slider
-                disabled={false}
-                orientation="horizontal"
-                valueLabelDisplay="on"
-                min={0}
-                max={256}
-                value={skipBytes}
-                onChange={(_event, value, _activeThumb) => setSkipBytes(Array.isArray(value) ? value[0] : value)}
-              />
-            </Grid>
-            <Grid xs={4}>
-              <Slider
-                disabled={false}
-                marks
-                orientation="horizontal"
-                valueLabelDisplay="on"
-                min={1}
-                max={16}
-                value={dataWidth}
-                onChange={(_event, value, _activeThumb) => setDataWidth(Array.isArray(value) ? value[0] : value)}
-              />
-            </Grid>
-            <Grid xs={4}>
-              <Slider
-                disabled={false}
-                marks
-                orientation="horizontal"
-                valueLabelDisplay="on"
-                min={1}
-                max={24}
-                value={dataHeight}
-                onChange={(_event, value, _activeThumb) => setDataHeight(Array.isArray(value) ? value[0] : value)}
-              />
-            </Grid>
-          </Grid>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>Parsed Character Set: {inputData.length} characters</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <CharacterSet dataWidth={dataWidth} data={inputData}></CharacterSet>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>Sanatizing:</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-            <Grid xs={6}>Width (in pixel):</Grid>
-            <Grid xs={6}>Height (in pixel):</Grid>
-            <Grid xs={6}>
-              <Slider
-                disabled={false}
-                marks
-                orientation="horizontal"
-                valueLabelDisplay="on"
-                min={1}
-                max={dataWidth}
-                value={width}
-                onChange={(_event, value, _activeThumb) => setWidth(Array.isArray(value) ? value[0] : value)}
-              />
-            </Grid>
-            <Grid xs={6}>
-              <Slider
-                disabled={false}
-                marks
-                orientation="horizontal"
-                valueLabelDisplay="on"
-                min={1}
-                max={dataHeight}
-                value={height}
-                onChange={(_event, value, _activeThumb) => setHeight(Array.isArray(value) ? value[0] : value)}
-              />
-            </Grid>
-          </Grid>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>Sanitized Character Set:</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <CharacterSet dataWidth={width} data={sanitizedData}></CharacterSet>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>Sanitized Result JSON:</Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <FormControl>
-            <FormLabel>JSON byte array:</FormLabel>
-            <Textarea minRows={5} maxRows={5} variant="outlined" value={resultJSON} readOnly={true} />
-            <FormHelperText>Sanitized data for character sets.</FormHelperText>
-          </FormControl>
-        </Sheet>
-      </Grid>
-      <Grid xs={12}>
-        <Sheet variant="outlined" sx={{ p: 4 }}>
-          <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-            <Grid xs={3}>
-              <Button loading={false} onClick={copy} variant="solid">
-                Copy To Clipboard
-              </Button>
-            </Grid>
-            <Grid xs={9}>
-              <Box display="flex" justifyContent="flex-end">
-                <Button loading={false} onClick={download} variant="solid">
-                  Download Binary
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>Sanitized Character Set:</Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <CharacterSet dataWidth={width} data={sanitizedData}></CharacterSet>
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>Sanitized Result JSON:</Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <FormControl>
+              <FormLabel>JSON byte array:</FormLabel>
+              <Textarea minRows={5} maxRows={5} variant="outlined" value={resultJSON} readOnly={true} />
+              <FormHelperText>Sanitized data for character sets.</FormHelperText>
+            </FormControl>
+          </Sheet>
+        </Grid>
+        <Grid xs={12}>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+              <Grid xs={3}>
+                <Button loading={false} onClick={copy} variant="solid">
+                  <CopyAll />
+                  Copy To Clipboard
+
                 </Button>
-              </Box>
+              </Grid>
+              <Grid xs={9}>
+                <Box display="flex" justifyContent="flex-end">
+                  <Button loading={false} onClick={download} variant="solid">
+                    Download Binary
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </Sheet>
+          </Sheet>
+        </Grid>
       </Grid>
-    </Grid>
+      </Layout>
   );
 };
 
