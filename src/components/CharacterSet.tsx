@@ -7,7 +7,7 @@ const CharacterSet: React.FC<{
   rowCount?: number;
   scale?: number;
 }> = (props) => {
-  const { dataWidth, data, rowCount = 32, scale = 4 } = props;
+  const { dataWidth, data, rowCount = 32, scale = 3 } = props;
   const width = dataWidth * scale;
 
   const charCount = data.length;
