@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const { EOL } = require("os");
+
+if (process.argv.indexOf('-h') !== -1) {
+  console.log('Dumps binary data to a JSON data array.');
+  console.log();
+  console.log('Usage: dumpbin <file> [-v]')
+  console.log()
+  console.log('  <file> File to dump.');
+  console.log();
+  console.log('  -v     Verbose output.');
+  process.exit(0);
+}
+
+const verbose = process.argv.indexOf('-v') !== -1;
+const filename = path.resolve(process.argv[2]);
+
+if (verbose) {
+  console.log(`Filename: ${filename}`);
+}
+
+const data = fs.readFileSync(filename, { flag: 'r' });
+
+if (verbose) {
+  console.log(`Data:`);
+}
+process.stdout.write(JSON.stringify(Array.from(data)) + EOL);
+
+if (verbose) {
+  console.log(`Done.`);
+}

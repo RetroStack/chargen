@@ -1,0 +1,7 @@
+{
+    "prettier.documentSelectors": [
+        "*.js,*.ts,*.tsx"
+    ],
+    "prettier.endOfLine": "auto",
+    "prettier.trailingComma": "all"
+}
