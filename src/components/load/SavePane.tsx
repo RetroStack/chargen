@@ -35,7 +35,7 @@ const SavePane: React.FC<PropType> = (props) => {
   };
 
   return (
-    <div>
+    <>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={errorMsg != null}
@@ -82,7 +82,7 @@ const SavePane: React.FC<PropType> = (props) => {
           </Grid>
         </Sheet>
       </Grid>
-    </div>
+    </>
   );
 };
 

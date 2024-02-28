@@ -101,7 +101,7 @@ const InputPane: React.FC<PropType> = (props) => {
   }, [pattern]);
 
   return (
-    <div>
+    <>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={errorMsg != null}
@@ -195,7 +195,7 @@ const InputPane: React.FC<PropType> = (props) => {
           </Tabs>
         </Sheet>
       </Grid>
-    </div>
+    </>
   );
 };
 

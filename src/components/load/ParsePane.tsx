@@ -78,7 +78,7 @@ const ParsePane: React.FC<PropType> = (props) => {
   }, [dataWidth]);
 
   return (
-    <div>
+    <>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={errorMsg != null}
@@ -173,14 +173,14 @@ const ParsePane: React.FC<PropType> = (props) => {
       </Grid>
       <Grid xs={12}>
         <Sheet variant="outlined" sx={{ p: 4 }}>
-          <CharacterSet dataWidth={dataWidth} data={characters}></CharacterSet>
+          <CharacterSet dataWidth={dataWidth} characters={characters}></CharacterSet>
         </Sheet>
       </Grid>
       <Button loading={false} onClick={onParseBack} variant="soft" color="neutral">
         Back
       </Button>
       <Button onClick={submit}>Next</Button>
-    </div>
+    </>
   );
 };
 

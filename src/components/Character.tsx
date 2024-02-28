@@ -1,21 +1,22 @@
 import * as React from "react";
 import Canvas from "./Canvas";
 
-const CharacterCustom: React.FC<{
+type PropsType = {
   width?: number;
   height?: number;
   dataWidth: number;
-  data: number[];
-}> = (props) => {
-  const width: number = props.width ?? 150;
-  const height: number = props.height ?? 150;
+  character: number[];
+  refresh?: number;
+  selected?: boolean;
+  onClick?: (event: { x: number; y: number; character: number[] }) => void;
+};
 
-  const dataWidth = props.dataWidth;
-  const data = props.data;
+const Character: React.FC<PropsType> = (props) => {
+  const { dataWidth, character, selected, width = 150, height = 150 } = props;
 
-  const dataHeight = data.length;
+  const dataHeight = character.length;
   if (dataHeight == 0) {
-    return <div></div>;
+    return <></>;
   }
 
   const pixelWidth = Math.floor(width / dataWidth);
@@ -27,7 +28,7 @@ const CharacterCustom: React.FC<{
     ctx.fillStyle = "rgb(255 255 255)";
 
     for (let y = 0; y < dataHeight; y++) {
-      let value = data[y] & 0xff;
+      let value = character[y] & 0xff;
 
       for (let x = dataWidth - 1; x >= 0; x--) {
         const drawPixel = (value & 0x01) == 1;
@@ -39,7 +40,13 @@ const CharacterCustom: React.FC<{
     }
   };
 
-  return <Canvas draw={draw} width={width} height={height} />;
+  const onClick: (event: { x: number; y: number }) => void = (event) => {
+    const x = Math.floor(event.x / pixelWidth);
+    const y = Math.floor(event.y / pixelHeight);
+    props.onClick && props.onClick({ x, y, character });
+  };
+
+  return <Canvas selected={selected} draw={draw} width={width} height={height} onClick={onClick} />;
 };
 
-export default CharacterCustom;
+export default Character;

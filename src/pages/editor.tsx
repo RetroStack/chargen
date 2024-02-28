@@ -1,0 +1,170 @@
+import * as React from "react";
+import type { HeadFC, PageProps } from "gatsby";
+
+import Sheet from "@mui/joy/Sheet";
+import Grid from "@mui/joy/Grid";
+import Textarea from "@mui/joy/Textarea";
+import Button from "@mui/joy/Button";
+import CopyAll from "@mui/icons-material/CopyAll";
+import Box from "@mui/joy/Box";
+import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+
+import CharacterSet from "../components/CharacterSet";
+import Character from "../components/Character";
+import SearchPane from "../components/index/SearchPane";
+
+import charsets from "../chargen";
+import { downloadData, charsetToByteArray } from "../utils/binary";
+import { copyToClipboard } from "../utils/clipboard";
+
+const EditPage: React.FC<PageProps> = () => {
+  const [selectedCharset, setSelectedCharset] = React.useState(0);
+  const [selectedCharacter, setSelectedCharacter] = React.useState(0);
+  const [refresh, setRefresh] = React.useState(0);
+
+  const charset = charsets[selectedCharset];
+
+  const download = () => {
+    const data = charsetToByteArray(charset.data, charset.dataWidth);
+    downloadData(data);
+  };
+
+  const copy = () => {
+    copyToClipboard(JSON.stringify(charset.data));
+  };
+
+  return (
+    <>
+      <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+        <Grid xs={6}>
+          <SearchPane
+            onClick={(event) => {
+              charset.data[selectedCharacter] = event.character.concat([]);
+              setRefresh(refresh + 1);
+            }}
+          />
+        </Grid>
+        <Grid xs={6}>
+          <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+            <Box m="auto" pb="2rem">
+              <Button
+                loading={false}
+                onClick={() => {
+                  setSelectedCharset(Math.max(0, selectedCharset - 1));
+                }}
+                variant="solid"
+                disabled={selectedCharset === 0}
+              >
+                <ArrowCircleLeftIcon />
+              </Button>
+              ({selectedCharset + 1} of {Math.ceil(charsets.length)})
+              <Button
+                loading={false}
+                onClick={() => {
+                  setSelectedCharset(selectedCharset + 1);
+                }}
+                variant="solid"
+                disabled={selectedCharset === Math.floor(charsets.length)}
+              >
+                <ArrowCircleRightIcon />
+              </Button>
+              <Button
+                loading={false}
+                onClick={() => {
+                  setSelectedCharset(selectedCharset + 10);
+                }}
+                variant="solid"
+                disabled={selectedCharset === Math.floor(charsets.length)}
+              >
+                <ArrowCircleRightIcon />
+                +10
+              </Button>
+            </Box>
+          </Grid>
+          <Sheet variant="outlined" sx={{ p: 4 }}>
+            <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+              <Grid>
+                <CharacterSet
+                  dataWidth={charset.dataWidth}
+                  characters={charset.data}
+                  refresh={refresh}
+                  selectedCharacter={selectedCharacter}
+                  onClick={(event) => {
+                    setSelectedCharacter(event.characterIndex);
+                  }}
+                ></CharacterSet>
+                <Character
+                  dataWidth={charset.dataWidth}
+                  character={charset.data[selectedCharacter]}
+                  refresh={refresh}
+                  onClick={(event) => {
+                    const mask = 1 << (charset.dataWidth - event.x - 1);
+                    const value = mask ^ charset.data[selectedCharacter][event.y];
+                    charset.data[selectedCharacter][event.y] = value;
+                    setRefresh(refresh + 1);
+                  }}
+                ></Character>
+                <Button
+                  loading={false}
+                  onClick={() => {
+                    const currentChar = charset.data[selectedCharacter];
+                    charset.data[selectedCharacter] = currentChar.slice(1).concat([currentChar[0]]);
+                    setRefresh(refresh + 1);
+                  }}
+                  variant="solid"
+                >
+                  Move Up
+                </Button>
+                <Button
+                  loading={false}
+                  onClick={() => {
+                    const currentChar = charset.data[selectedCharacter];
+                    charset.data[selectedCharacter] = [currentChar[currentChar.length - 1]].concat(
+                      currentChar.slice(0, currentChar.length - 1),
+                    );
+                    setRefresh(refresh + 1);
+                  }}
+                  variant="solid"
+                >
+                  Move Down
+                </Button>
+                <Textarea
+                  minRows={5}
+                  maxRows={5}
+                  variant="outlined"
+                  value={JSON.stringify(charset.data)}
+                  readOnly={true}
+                />
+              </Grid>
+            </Grid>
+            <Grid xs={12}>
+              <Sheet variant="outlined" sx={{ p: 4 }}>
+                <Grid container spacing={2} sx={{ flexGrow: 1 }}>
+                  <Grid xs={3}></Grid>
+                  <Grid xs={3}>
+                    <Button loading={false} onClick={copy} variant="solid">
+                      <CopyAll />
+                      Copy To Clipboard
+                    </Button>
+                  </Grid>
+                  <Grid xs={6}>
+                    <Box display="flex" justifyContent="flex-end">
+                      <Button loading={false} onClick={download} variant="solid">
+                        Download Binary
+                      </Button>
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Sheet>
+            </Grid>{" "}
+          </Sheet>
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+export default EditPage;
+
+export const Head: HeadFC = () => <title>Character Generator Editor</title>;

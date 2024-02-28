@@ -46,7 +46,7 @@ const ModifyPane: React.FC<PropType> = (props) => {
   }, [width, height]);
 
   return (
-    <div>
+    <>
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={errorMsg != null}
@@ -95,14 +95,14 @@ const ModifyPane: React.FC<PropType> = (props) => {
       <Grid xs={12}>Sanitized Character Set:</Grid>
       <Grid xs={12}>
         <Sheet variant="outlined" sx={{ p: 4 }}>
-          <CharacterSet dataWidth={width} data={characters}></CharacterSet>
+          <CharacterSet dataWidth={width} characters={characters}></CharacterSet>
         </Sheet>
       </Grid>
       <Button loading={false} onClick={onModifyBack} variant="soft" color="neutral">
         Back
       </Button>
       <Button onClick={submit}>Next</Button>
-    </div>
+    </>
   );
 };
 
