@@ -27,7 +27,7 @@ const SavePane: React.FC<PropType> = (props) => {
 
   const download = () => {
     const data = charsetToByteArray(characters, dataWidth);
-    downloadData(data);
+    downloadData(new Uint8Array(data));
   };
 
   const copy = () => {

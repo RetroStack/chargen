@@ -1,4 +1,4 @@
-const charsetToByteArray = (charset: number[][], dataWidth: number): Uint8Array => {
+const charsetToByteArray = (charset: number[][], dataWidth: number): number[] => {
   const result: number[] = [];
   const bytes = Math.ceil(dataWidth / 8);
 
@@ -13,7 +13,7 @@ const charsetToByteArray = (charset: number[][], dataWidth: number): Uint8Array 
     }
   }
 
-  return new Uint8Array(result);
+  return result;
 };
 
 const downloadData = (data: Uint8Array) => {

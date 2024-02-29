@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
 type PropsType = {
-  onClick?: (event: { character: number[]; characterIndex: number }) => void;
+  onClick?: (event: { character: number[]; characterIndex: number; charset: number[][]; charsetIndex: number }) => void;
 };
 
 const SearchPane: React.FC<PropsType> = (props) => {
@@ -26,10 +26,24 @@ const SearchPane: React.FC<PropsType> = (props) => {
 
   const currentIndex = pageSize * page;
 
+  charsets.forEach((charset, idx) => {
+    if (idx > 32) return;
+    const characters = charset.data;
+    if (characters.length != 128) {
+      console.log("#" + idx + " " + characters.length + " " + charset.title);
+    }
+    for (let i = 0; i < characters.length - 1; i++) {
+      const character = characters[i];
+      if (character.length != 8) {
+        console.log("#" + idx + ":" + i + " " + character.length + " " + charset.title);
+      }
+    }
+  });
+
   const elements = charsets.slice(currentIndex, currentIndex + pageSize).map((item, idx) => {
     const { title, system, source, notes, dataWidth, data } = item;
     return (
-      <Sheet variant="outlined" sx={{ p: 4 }}>
+      <Sheet key={idx} variant="outlined" sx={{ p: 4 }}>
         <Grid container spacing={2} sx={{ flexGrow: 1 }} pb="1.5rem">
           <Card sx={{ margin: "auto", marginBottom: "1rem" }}>
             <Typography variant="h3"> {title} </Typography>
@@ -91,6 +105,8 @@ const SearchPane: React.FC<PropsType> = (props) => {
                 const newEvent = {
                   character: event.characters[event.characterIndex],
                   characterIndex: event.characterIndex,
+                  charset: event.characters,
+                  charsetIndex: currentIndex + idx,
                 };
                 onClick && onClick(newEvent);
               }}

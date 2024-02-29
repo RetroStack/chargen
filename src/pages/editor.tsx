@@ -27,7 +27,7 @@ const EditPage: React.FC<PageProps> = () => {
 
   const download = () => {
     const data = charsetToByteArray(charset.data, charset.dataWidth);
-    downloadData(data);
+    downloadData(new Uint8Array(data));
   };
 
   const copy = () => {
@@ -105,30 +105,222 @@ const EditPage: React.FC<PageProps> = () => {
                     setRefresh(refresh + 1);
                   }}
                 ></Character>
-                <Button
-                  loading={false}
-                  onClick={() => {
-                    const currentChar = charset.data[selectedCharacter];
-                    charset.data[selectedCharacter] = currentChar.slice(1).concat([currentChar[0]]);
-                    setRefresh(refresh + 1);
-                  }}
-                  variant="solid"
-                >
-                  Move Up
-                </Button>
-                <Button
-                  loading={false}
-                  onClick={() => {
-                    const currentChar = charset.data[selectedCharacter];
-                    charset.data[selectedCharacter] = [currentChar[currentChar.length - 1]].concat(
-                      currentChar.slice(0, currentChar.length - 1),
-                    );
-                    setRefresh(refresh + 1);
-                  }}
-                  variant="solid"
-                >
-                  Move Down
-                </Button>
+                <div>
+                  <div>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.map((val) => {
+                          const m = (val & (1 << (charset.dataWidth - 1))) >> (charset.dataWidth - 1);
+                          const r = val << 1;
+                          return m | r;
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move Left
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.map((val) => {
+                          const m = (val & 1) << (charset.dataWidth - 1);
+                          const r = val >> 1;
+                          return m | r;
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move Right
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.slice(1).concat([currentChar[0]]);
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move Up
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = [currentChar[currentChar.length - 1]].concat(
+                          currentChar.slice(0, currentChar.length - 1),
+                        );
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move Down
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.map(() => {
+                          return 0;
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        let mask = 1;
+                        for (let i = 0; i < charset.dataWidth - 1; i++) {
+                          mask = mask | (mask << 1);
+                        }
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.map(() => {
+                          return mask;
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Set
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        let mask = 1;
+                        for (let i = 0; i < charset.dataWidth - 1; i++) {
+                          mask = mask | (mask << 1);
+                        }
+                        const currentChar = charset.data[selectedCharacter];
+                        charset.data[selectedCharacter] = currentChar.map((val) => {
+                          return ~val & mask;
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Invert
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.map((val) => {
+                            const m = (val & (1 << (charset.dataWidth - 1))) >> (charset.dataWidth - 1);
+                            const r = val << 1;
+                            return m | r;
+                          });
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move All Left
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.map((val) => {
+                            const m = (val & 1) << (charset.dataWidth - 1);
+                            const r = val >> 1;
+                            return m | r;
+                          });
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move All Right
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.slice(1).concat([currentChar[0]]);
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move All Up
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        charset.data = charset.data.map((currentChar) => {
+                          return [currentChar[currentChar.length - 1]].concat(
+                            currentChar.slice(0, currentChar.length - 1),
+                          );
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Move All Down
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.map(() => {
+                            return 0;
+                          });
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Clear All
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        let mask = 1;
+                        for (let i = 0; i < charset.dataWidth - 1; i++) {
+                          mask = mask | (mask << 1);
+                        }
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.map(() => {
+                            return mask;
+                          });
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Set All
+                    </Button>
+                    <Button
+                      loading={false}
+                      onClick={() => {
+                        let mask = 1;
+                        for (let i = 0; i < charset.dataWidth - 1; i++) {
+                          mask = mask | (mask << 1);
+                        }
+                        charset.data = charset.data.map((currentChar) => {
+                          return currentChar.map((val) => {
+                            return ~val & mask;
+                          });
+                        });
+                        setRefresh(refresh + 1);
+                      }}
+                      variant="solid"
+                    >
+                      Invert All
+                    </Button>
+                  </div>
+                </div>
+
                 <Textarea
                   minRows={5}
                   maxRows={5}
@@ -157,7 +349,7 @@ const EditPage: React.FC<PageProps> = () => {
                   </Grid>
                 </Grid>
               </Sheet>
-            </Grid>{" "}
+            </Grid>
           </Sheet>
         </Grid>
       </Grid>

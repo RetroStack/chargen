@@ -7,6 +7,6 @@ import Misc from "./Misc";
 import Sinclair from "./Sinclair";
 import TRS80 from "./TRS80";
 
-const charsets: CharacterSetType = [...Apple, ...Commodore, ...IBM, ...Misc, ...Sinclair, ...TRS80];
+const charsets: CharacterSetType = [...TRS80, ...Apple, ...Commodore, ...IBM, ...Misc, ...Sinclair];
 
 export default charsets;
