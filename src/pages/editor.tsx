@@ -27,7 +27,7 @@ const EditPage: React.FC<PageProps> = () => {
 
   const download = () => {
     const data = charsetToByteArray(charset.data, charset.dataWidth);
-    downloadData(new Uint8Array(data));
+    downloadData(new Uint8Array(data), "character_set.bin");
   };
 
   const copy = () => {

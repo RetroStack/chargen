@@ -16,13 +16,13 @@ const charsetToByteArray = (charset: number[][], dataWidth: number): number[] =>
   return result;
 };
 
-const downloadData = (data: Uint8Array) => {
+const downloadData = (data: Uint8Array, filename: string) => {
   const blob = new Blob([data.buffer], {
     type: "application/octet-stream",
   });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = "character_set.bin";
+  link.download = filename;
   link.click();
 };
 

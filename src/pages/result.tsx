@@ -39,6 +39,24 @@ const ListPage: React.FC<PageProps> = () => {
   const inverse = () => {
     setSelectedCharsets(selectedCharsets.slice(0).reverse());
   };
+  const bitFlip = () => {
+    const maxBits = Math.ceil(Math.log(selectedCharsets.length) / Math.log(2));
+    const flipBits = (num: number) => {
+      let rev = 0;
+      for (let i = 0; i < maxBits; i++) {
+        rev = (rev << 1) | (num & 1);
+        num = num >> 1;
+      }
+      return rev;
+    };
+    const newSelectedCharsets = selectedCharsets
+      .map((_v, idx) => {
+        const index = flipBits(idx);
+        return selectedCharsets[index];
+      })
+      .filter((val) => val != null);
+    setSelectedCharsets(newSelectedCharsets);
+  };
 
   const download = () => {
     const data = selectedCharsets.reduce<number[]>((acc, charsetIndex) => {
@@ -49,7 +67,7 @@ const ListPage: React.FC<PageProps> = () => {
       }
       return acc;
     }, []);
-    downloadData(new Uint8Array(data));
+    downloadData(new Uint8Array(data), "character_set.bin");
   };
 
   return (
@@ -69,9 +87,14 @@ const ListPage: React.FC<PageProps> = () => {
               <Grid>{charsetEl}</Grid>
             </Grid>
             <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-              <Grid xs={6}>
+              <Grid xs={3}>
                 <Button loading={false} onClick={inverse} variant="solid">
                   Inverse
+                </Button>
+              </Grid>
+              <Grid xs={3}>
+                <Button loading={false} onClick={bitFlip} variant="solid">
+                  Bit-Flip
                 </Button>
               </Grid>
               <Grid xs={6}>

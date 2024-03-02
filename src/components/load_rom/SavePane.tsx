@@ -1,33 +1,31 @@
 import React from "react";
+
 import Sheet from "@mui/joy/Sheet";
 import Grid from "@mui/joy/Grid";
 import Textarea from "@mui/joy/Textarea";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
-import FormHelperText from "@mui/joy/FormHelperText";
 import Button from "@mui/joy/Button";
 import Box from "@mui/joy/Box";
-import { downloadData, charsetToByteArray } from "../../utils/binary";
+import { downloadData } from "../../utils/binary";
 import { copyToClipboard } from "../../utils/clipboard";
 import CopyAll from "@mui/icons-material/CopyAll";
 import Snackbar from "@mui/joy/Snackbar";
 
 type PropType = {
-  characters: number[][];
-  dataWidth: number;
+  data: number[];
   onSaveBack: () => void;
 };
 
 const SavePane: React.FC<PropType> = (props) => {
-  const { characters, dataWidth, onSaveBack } = props;
+  const { data, onSaveBack } = props;
 
   const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
-  const resultJSON = JSON.stringify(characters);
+  const resultJSON = JSON.stringify(data);
 
   const download = () => {
-    const data = charsetToByteArray(characters, dataWidth);
-    downloadData(new Uint8Array(data), "character_set.bin");
+    downloadData(new Uint8Array(data), "rom.bin");
   };
 
   const copy = () => {
@@ -54,7 +52,6 @@ const SavePane: React.FC<PropType> = (props) => {
           <FormControl>
             <FormLabel>JSON byte array:</FormLabel>
             <Textarea minRows={5} maxRows={5} variant="outlined" value={resultJSON} readOnly={true} />
-            <FormHelperText>Sanitized data for character sets.</FormHelperText>
           </FormControl>
         </Sheet>
       </Grid>
