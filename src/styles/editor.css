@@ -1,0 +1,8 @@
+.arrow {
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.arrow:hover {
+    color: cornflowerblue;
+}
