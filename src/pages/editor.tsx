@@ -7,6 +7,7 @@ import CardContent from "@mui/joy/CardContent";
 import Textarea from "@mui/joy/Textarea";
 import Button from "@mui/joy/Button";
 import CopyAll from "@mui/icons-material/CopyAll";
+import Download from "@mui/icons-material/Download";
 import Box from "@mui/joy/Box";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
@@ -375,24 +376,19 @@ const EditPage: React.FC<PageProps> = () => {
                   direction="column"
                   alignItems="center"
                   justifyContent="center">
-              <Sheet variant="outlined" sx={{ p: 4 }}>
-                <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-                  <Grid xs={3}></Grid>
-                  <Grid xs={3}>
-                    <Button loading={false} onClick={copy} variant="solid">
-                      <CopyAll />
-                      Copy To Clipboard
-                    </Button>
-                  </Grid>
-                  <Grid xs={6}>
-                    <Box display="flex" justifyContent="flex-end">
-                      <Button loading={false} onClick={download} variant="solid">
-                        Download Binary
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Sheet>
+                <Card sx={{m:"auto", mt:2, mb: 2}} variant="plain">
+                    <CardActionArea>
+                        <CardActions>
+                            <Button loading={false} onClick={copy} variant="solid">
+                                <CopyAll />
+                                Copy To Clipboard
+                            </Button>
+                            <Button loading={false} onClick={download} variant="solid">
+                                <Download/> Download Binary
+                            </Button>
+                        </CardActions>
+                    </CardActionArea>
+                </Card>
             </Grid>
           </Sheet>
         </Grid>
