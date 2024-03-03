@@ -287,78 +287,78 @@ const EditPage: React.FC<PageProps> = () => {
                                 </CardActions>
                             </div>
                         </CardActionArea>
+                        <div style={{display: "flex", justifyContent: "center"}}>
+                            <div style={{ width: "fit-content", textAlign: "center"}}>
+                              <div>
+                                  <KeyboardArrowUpOutlinedIcon
+                                      className="arrow"
+                                      loading={false}
+                                      onClick={() => {
+                                          const currentChar = charset.data[selectedCharacter];
+                                          charset.data[selectedCharacter] = currentChar.slice(1).concat([currentChar[0]]);
+                                          setRefresh(refresh + 1);
+                                      }}
+                                  />
+                              </div>
+                              <div style={{display: "flex", alignItems: "center"}}>
 
-                        <div style={{ width: "fit-content", textAlign: "center"}}>
-                      <div>
-                          <KeyboardArrowUpOutlinedIcon
-                              className="arrow"
-                              loading={false}
-                              onClick={() => {
-                                  const currentChar = charset.data[selectedCharacter];
-                                  charset.data[selectedCharacter] = currentChar.slice(1).concat([currentChar[0]]);
-                                  setRefresh(refresh + 1);
-                              }}
-                          />
-                      </div>
-                      <div style={{display: "flex", alignItems: "center"}}>
+                                  <div>
+                                      <KeyboardArrowLeftOutlinedIcon
+                                          loading={false}
+                                          className="arrow"
+                                          onClick={() => {
+                                              const currentChar = charset.data[selectedCharacter];
+                                              charset.data[selectedCharacter] = currentChar.map((val) => {
+                                                  const m = (val & (1 << (charset.dataWidth - 1))) >> (charset.dataWidth - 1);
+                                                  const r = val << 1;
+                                                  return m | r;
+                                              });
+                                              setRefresh(refresh + 1);
+                                          }}
+                                      />
+                                  </div>
+                                  <Character
+                                      dataWidth={charset.dataWidth}
+                                      character={charset.data[selectedCharacter]}
+                                      refresh={refresh}
+                                      onClick={(event) => {
+                                          const mask = 1 << (charset.dataWidth - event.x - 1);
+                                          const value = mask ^ charset.data[selectedCharacter][event.y];
+                                          charset.data[selectedCharacter][event.y] = value;
+                                          setRefresh(refresh + 1);
+                                      }}
+                                  ></Character>
+                                  <div>
+                                      <KeyboardArrowRightOutlinedIcon
+                                          loading={false}
+                                          className="arrow"
+                                          onClick={() => {
+                                              const currentChar = charset.data[selectedCharacter];
+                                              charset.data[selectedCharacter] = currentChar.map((val) => {
+                                                  const m = (val & 1) << (charset.dataWidth - 1);
+                                                  const r = val >> 1;
+                                                  return m | r;
+                                              });
+                                              setRefresh(refresh + 1);
+                                          }}
+                                      />
+                                  </div>
 
-                          <div>
-                              <KeyboardArrowLeftOutlinedIcon
-                                  loading={false}
-                                  className="arrow"
-                                  onClick={() => {
-                                      const currentChar = charset.data[selectedCharacter];
-                                      charset.data[selectedCharacter] = currentChar.map((val) => {
-                                          const m = (val & (1 << (charset.dataWidth - 1))) >> (charset.dataWidth - 1);
-                                          const r = val << 1;
-                                          return m | r;
-                                      });
-                                      setRefresh(refresh + 1);
-                                  }}
-                              />
-                          </div>
-                          <Character
-                              dataWidth={charset.dataWidth}
-                              character={charset.data[selectedCharacter]}
-                              refresh={refresh}
-                              onClick={(event) => {
-                                  const mask = 1 << (charset.dataWidth - event.x - 1);
-                                  const value = mask ^ charset.data[selectedCharacter][event.y];
-                                  charset.data[selectedCharacter][event.y] = value;
-                                  setRefresh(refresh + 1);
-                              }}
-                          ></Character>
-                          <div>
-                              <KeyboardArrowRightOutlinedIcon
-                                  loading={false}
-                                  className="arrow"
-                                  onClick={() => {
-                                      const currentChar = charset.data[selectedCharacter];
-                                      charset.data[selectedCharacter] = currentChar.map((val) => {
-                                          const m = (val & 1) << (charset.dataWidth - 1);
-                                          const r = val >> 1;
-                                          return m | r;
-                                      });
-                                      setRefresh(refresh + 1);
-                                  }}
-                              />
-                          </div>
-
-                      </div>
-                      <div>
-                          <KeyboardArrowDownOutlinedIcon
-                              loading={false}
-                              className="arrow"
-                              onClick={() => {
-                                  const currentChar = charset.data[selectedCharacter];
-                                  charset.data[selectedCharacter] = [currentChar[currentChar.length - 1]].concat(
-                                      currentChar.slice(0, currentChar.length - 1),
-                                  );
-                                  setRefresh(refresh + 1);
-                              }}/>
-                      </div>
-
-                  </div>
+                              </div>
+                              <div>
+                                  <KeyboardArrowDownOutlinedIcon
+                                      loading={false}
+                                      className="arrow"
+                                      onClick={() => {
+                                          const currentChar = charset.data[selectedCharacter];
+                                          charset.data[selectedCharacter] = [currentChar[currentChar.length - 1]].concat(
+                                              currentChar.slice(0, currentChar.length - 1),
+                                          );
+                                          setRefresh(refresh + 1);
+                                      }}/>
+                              </div>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
                   <Textarea
