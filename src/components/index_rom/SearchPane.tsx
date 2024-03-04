@@ -32,7 +32,7 @@ const SearchPane: React.FC<PropsType> = (props) => {
         <Grid container spacing={2} sx={{ flexGrow: 1 }} pb="1.5rem">
           <Card sx={{ margin: "auto", marginBottom: "1rem" }}>
             <Typography variant="h3"> {title} </Typography>
-            <Divider pb="1rem" />
+            <Divider />
             <Grid container spacing={2} sx={{ flexGrow: 1 }}>
               <Grid xs={4}>
                 <CardContent>
