@@ -132,7 +132,7 @@ const InputPane: React.FC<PropType> = (props) => {
                 JSON
               </Tab>
             </TabList>
-            <TabPanel value={0} sx={{ minHeight: "650px" }}>
+            <TabPanel value={0} sx={{ minHeight: "525px" }}>
               <div {...getRootProps()}>
                 <div
                   style={{
@@ -140,7 +140,7 @@ const InputPane: React.FC<PropType> = (props) => {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
-                    minHeight: "610px",
+                    minHeight: "500px",
                     alignItems: "center",
                     cursor: "pointer",
                   }}
@@ -151,7 +151,7 @@ const InputPane: React.FC<PropType> = (props) => {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel value={1} sx={{ minHeight: "650px" }}>
+            <TabPanel value={1} sx={{ minHeight: "525px" }}>
               <FormControl>
                 <FormLabel>Text Pattern:</FormLabel>
                 <Textarea
@@ -177,7 +177,7 @@ const InputPane: React.FC<PropType> = (props) => {
                 <Button onClick={submitJSON}>Load</Button>
               </FormControl>
             </TabPanel>
-            <TabPanel value={2} sx={{ minHeight: "650px" }}>
+            <TabPanel value={2} sx={{ minHeight: "525px" }}>
               <FormControl>
                 <FormLabel>JSON byte array:</FormLabel>
                 <Textarea
