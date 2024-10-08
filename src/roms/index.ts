@@ -3115,6 +3115,26 @@ const roms: SystemROMType = [
       0,
     ],
   },
+  {
+    title: "All 0s",
+    source: "RetroStack",
+    notes: "",
+    system: "TRS-80 Model 1",
+    data: [0].reduce<number[]>((acc, item) => {
+      for (let i = 0; i < 16384; i++) acc.push(item);
+      return acc;
+    }, []),
+  },
+  {
+    title: "All 10s",
+    source: "RetroStack",
+    notes: "",
+    system: "TRS-80 Model 1",
+    data: [255].reduce<number[]>((acc, item) => {
+      for (let i = 0; i < 16384; i++) acc.push(item);
+      return acc;
+    }, []),
+  },
 ];
 
 export default roms;
