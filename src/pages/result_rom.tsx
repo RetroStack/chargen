@@ -15,7 +15,7 @@ import Option from "@mui/joy/Option";
 
 const ListPage: React.FC<PageProps> = () => {
   const [selectedROMs, setSelectedROMs] = React.useState<number[]>([]);
-  const [selectedROMType, setSelectedROMType] = React.useState("trs80m1_2x_a_8");
+  const [selectedROMType, setSelectedROMType] = React.useState("0-8");
 
   const [startByte, setStartByte] = React.useState(0);
   const [byteLength, setByteLength] = React.useState(8192);
@@ -100,39 +100,59 @@ const ListPage: React.FC<PageProps> = () => {
                 onChange={(_event, value) => {
                   if (value) setSelectedROMType(value);
                   switch (value) {
-                    case "trs80m1_2x_a_8":
-                      setStartByte(0);
-                      setByteLength(8192);
-                      break;
-                    case "trs80m1_2x_b_4":
-                      setStartByte(8192);
-                      setByteLength(4096);
-                      break;
-                    case "trs80m1_2x_b_8":
-                      setStartByte(8192);
-                      setByteLength(8192);
-                      break;
-                    case "trs80m1_3x_a_4":
+                    case "0-4":
                       setStartByte(0);
                       setByteLength(4096);
                       break;
-                    case "trs80m1_3x_b_4":
+                    case "0-8":
+                      setStartByte(0);
+                      setByteLength(8192);
+                      break;
+                    case "0-12":
+                      setStartByte(0);
+                      setByteLength(12288);
+                      break;
+                    case "0-16":
+                      setStartByte(0);
+                      setByteLength(16384);
+                      break;
+                    case "4-8":
                       setStartByte(4096);
                       setByteLength(4096);
                       break;
-                    case "trs80m1_3x_c_4":
+                    case "4-12":
+                      setStartByte(4096);
+                      setByteLength(8192);
+                      break;
+                    case "4-16":
+                      setStartByte(4096);
+                      setByteLength(12288);
+                      break;
+                    case "8-12":
+                      setStartByte(4096);
+                      setByteLength(8192);
+                      break;
+                    case "8-16":
                       setStartByte(8192);
+                      setByteLength(8192);
+                      break;
+                    case "12-16":
+                      setStartByte(12288);
                       setByteLength(4096);
                       break;
                   }
                 }}
               >
-                <Option value="trs80m1_2x_a_8">TRS-80 Model 1 2xROMs - ROM A (8k)</Option>
-                <Option value="trs80m1_2x_b_4">TRS-80 Model 1 2xROMs - ROM B (4k)</Option>
-                <Option value="trs80m1_2x_b_8">TRS-80 Model 1 2xROMs - ROM B (8k)</Option>
-                <Option value="trs80m1_3x_a_4">TRS-80 Model 1 3xROMs - ROM A (4k)</Option>
-                <Option value="trs80m1_3x_b_4">TRS-80 Model 1 3xROMs - ROM B (4k)</Option>
-                <Option value="trs80m1_3x_c_4">TRS-80 Model 1 3xROMs - ROM C (4k)</Option>
+                <Option value="0-4">0-4k</Option>
+                <Option value="0_8">0-8k</Option>
+                <Option value="0_12">0-12k</Option>
+                <Option value="0_16">0-16k</Option>
+                <Option value="4-8">4k-8k</Option>
+                <Option value="4_12">4k-12k</Option>
+                <Option value="4_16">4k-16k</Option>
+                <Option value="8_12">8k-12k</Option>
+                <Option value="8_16">8k-16k</Option>
+                <Option value="12_16">12k-16k</Option>
               </Select>
             </Grid>
 
