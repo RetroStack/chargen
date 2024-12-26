@@ -1,9 +1,11 @@
 import type { GatsbyConfig } from "gatsby";
 
 const config: GatsbyConfig = {
+  pathPrefix: `chargen`,
   siteMetadata: {
     title: `TRS-80 Model 1 Debugging`,
-    siteUrl: `https://www.yourdomain.tld`
+    pathPrefix: `/chargen`,
+    siteUrl: `https://retrostack.github.io/chargen`
   },
   // More easily incorporate content into your pages through automatic TypeScript type generation and better GraphQL IntelliSense.
   // If you use VSCode you can also use the GraphQL plugin
