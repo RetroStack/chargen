@@ -144,15 +144,15 @@ const ListPage: React.FC<PageProps> = () => {
                 }}
               >
                 <Option value="0-4">0-4k</Option>
-                <Option value="0_8">0-8k</Option>
-                <Option value="0_12">0-12k</Option>
-                <Option value="0_16">0-16k</Option>
+                <Option value="0-8">0-8k</Option>
+                <Option value="0-12">0-12k</Option>
+                <Option value="0-16">0-16k</Option>
                 <Option value="4-8">4k-8k</Option>
-                <Option value="4_12">4k-12k</Option>
-                <Option value="4_16">4k-16k</Option>
-                <Option value="8_12">8k-12k</Option>
-                <Option value="8_16">8k-16k</Option>
-                <Option value="12_16">12k-16k</Option>
+                <Option value="4-12">4k-12k</Option>
+                <Option value="4-16">4k-16k</Option>
+                <Option value="8-12">8k-12k</Option>
+                <Option value="8-16">8k-16k</Option>
+                <Option value="12-16">12k-16k</Option>
               </Select>
             </Grid>
 
